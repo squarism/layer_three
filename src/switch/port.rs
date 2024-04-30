@@ -2,12 +2,14 @@ use std::fmt;
 
 use etherparse::Ethernet2Header;
 
+use crate::mac::MacAddress;
+
 pub struct Port {
-    mac_address: [u8; 6],
+    mac_address: MacAddress,
 }
 
 impl Port {
-    pub fn new(mac_address: [u8; 6]) -> Self {
+    pub fn new(mac_address: MacAddress) -> Self {
         Self { mac_address }
     }
 

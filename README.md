@@ -4,6 +4,8 @@ This project is a simplified model of networking up to layer three. It's designe
 
 The goal is to simulate the process of a server (box1) pinging another server (box2), using ICMP to illustrate the basic interactions between network components such as Ethernet frames, switches, and interfaces.
 
+The other goal of this project is to stay close enough to the abstraction that Linux users and ops people would experience but not so detailed that network engineer specialists would find this realistic or interesting.
+
 
 ## Components
 

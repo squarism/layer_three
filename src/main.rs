@@ -1,36 +1,25 @@
-// use crate::server::Server;
-
-use crate::{server::interface::Interface, switch::Switch};
-use etherparse::Ethernet2Header;
-
+mod mac;
 mod server;
 mod switch;
 
 fn main() {
-    let mut switch = Switch::new();
+    // box1 pings box2
 
-    let box1 = Interface::new("01:01:01:01:01:01");
-    let box2 = Interface::new("22:22:22:22:22:22");
+    // box1 calls getbyhostname(box2) which is resolved by hosts.rs
 
-    switch.plug_in_interface(1, &box1);
-    switch.plug_in_interface(2, &box2);
+    // box1's IP stack figures out that box2 is on eth0
+    // box1's IP stack figures out that the request is local, not needed to forward to the gateway
 
-    let frame = create_frame(box1.mac, box2.mac, "Hi".as_bytes());
-    switch.forward_frame(&frame);
+    // box1 crafts an ICMP echo request packet
 
-    println!("{:?}", switch);
-}
+    // now, this is a one-shot simulation program so we will setup this scenario but later we might turn this into
+    // a long running or concurrent or GUI program where this is situation is not pre-determined, but in the meantime ...
+    // box1 looks up the MAC address for box2 using ARP
+    // The ARP response is not found so it broadcasts an ARP who-has and gets a response
+    // box1 adds the response to its ARP cache
 
-// TODO: this should be somewhere else like the server as a device driver abstraction
-fn create_frame(src_mac: [u8; 6], dst_mac: [u8; 6], _payload: &[u8]) -> Ethernet2Header {
-    let mut frame = Vec::<u8>::new();
+    // box1 now crafts an Ethernet frame with the ip datagram in it (the ICMP packet) and sends it to
+    // the device.  This is simulated by a Rust channel or a method call on a Cable or Bus struct or something.
 
-    let ethernet_header = etherparse::Ethernet2Header {
-        source: src_mac,
-        destination: dst_mac,
-        ether_type: etherparse::EtherType::IPV4,
-    };
-
-    ethernet_header.write(&mut frame).unwrap();
-    ethernet_header
+    // the entire process is unwound on box2 which will not be covered here for now
 }

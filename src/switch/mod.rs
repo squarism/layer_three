@@ -4,15 +4,17 @@ use etherparse::Ethernet2Header;
 
 use std::{collections::HashMap, fmt};
 
+use crate::mac::MacAddress;
 use crate::server::interface::Interface;
 
 // an 8-port switch, could be any port size but we are keeping it simple
 pub struct Switch {
     ports: HashMap<u8, port::Port>,
     link_lights: HashMap<u8, bool>,
-    mac_table: HashMap<[u8; 6], u8>, // MAC to port number
+    mac_table: HashMap<MacAddress, u8>, // MAC to port number
 }
 
+#[allow(dead_code)]
 impl Switch {
     pub fn new() -> Self {
         Self {
@@ -60,8 +62,18 @@ mod tests {
     fn test_link_lights() {
         let mut switch = Switch::new();
 
-        let box1 = Interface::new("01:01:01:01:01:01");
-        let box2 = Interface::new("02:02:02:02:02:02");
+        let box1 = Interface::new(
+            "01:01:01:01:01:01",
+            "192.168.0.10".to_owned(),
+            "255.255.0.0".to_owned(),
+            None,
+        );
+        let box2 = Interface::new(
+            "02:02:02:02:02:02",
+            "192.168.0.20".to_owned(),
+            "255.255.0.0".to_owned(),
+            None,
+        );
 
         switch.plug_in_interface(1, &box1);
         switch.plug_in_interface(2, &box2);
@@ -75,8 +87,18 @@ mod tests {
     fn test_mac_table() {
         let mut switch = Switch::new();
 
-        let box1 = Interface::new("01:01:01:01:01:01");
-        let box2 = Interface::new("02:02:02:02:02:02");
+        let box1 = Interface::new(
+            "01:01:01:01:01:01",
+            "192.168.0.10".to_owned(),
+            "255.255.0.0".to_owned(),
+            None,
+        );
+        let box2 = Interface::new(
+            "02:02:02:02:02:02",
+            "192.168.0.20".to_owned(),
+            "255.255.0.0".to_owned(),
+            None,
+        );
 
         switch.plug_in_interface(1, &box1);
         switch.plug_in_interface(2, &box2);

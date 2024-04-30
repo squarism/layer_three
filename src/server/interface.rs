@@ -1,17 +1,23 @@
+use crate::mac::MacAddress;
+
 pub struct Interface {
+    pub mac: MacAddress,
     pub ip: String,
-    pub mac: [u8; 6],
+    pub subnet_mask: String,
+    pub gateway: Option<String>,
 }
 
 impl Interface {
-    pub fn new(mac: &str) -> Interface {
+    pub fn new(mac: &str, ip: String, subnet_mask: String, gateway: Option<String>) -> Interface {
         Interface {
-            ip: "1.2.3.4".to_owned(),
             mac: Self::parse_mac_address(mac),
+            ip,
+            subnet_mask,
+            gateway,
         }
     }
 
-    pub fn parse_mac_address(mac: &str) -> [u8; 6] {
+    pub fn parse_mac_address(mac: &str) -> MacAddress {
         let parts: Vec<&str> = mac.split(':').collect();
         if parts.len() != 6 {
             panic!("Invalid MAC address format");
@@ -28,6 +34,16 @@ impl Interface {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_new() {
+        let mac = "AA:BB:CC:DD:EE:FF";
+        let ip = "192.168.0.10".to_owned();
+        let subnet_mask = "255.255.0.0".to_owned();
+        let gateway = Some("192.168.0.1".to_owned());
+
+        let _interface = Interface::new(mac, ip, subnet_mask, gateway);
+    }
 
     #[test]
     fn test_parse_mac_address_valid() {

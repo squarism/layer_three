@@ -1,23 +1,43 @@
+pub mod arp;
+pub mod hosts;
 pub mod interface;
 
 use core::fmt;
+use std::collections::HashMap;
+
 use interface::Interface;
 
+#[allow(dead_code)]
+struct Route {
+    destination: String,
+    gateway: String,
+    interface_name: String,
+}
+
+#[allow(dead_code)]
 pub struct Server {
     hostname: String,
 
-    // for now, one interface
-    interface: Interface,
+    interface: Interface,               // for now, one interface
+    routes: Vec<Route>,                 // Routing table
+    arp_table: HashMap<String, String>, // Maps IP addresses to MAC addresses
 }
 
+#[allow(dead_code)]
 impl Server {
-    #[allow(dead_code)]
     pub fn new(hostname: String) -> Server {
-        let interface = Interface::new("00:11:22:33:44:55");
+        let interface = Interface::new(
+            "00:11:22:33:44:55",
+            "192.168.0.5".to_owned(),
+            "255.255.0.0".to_owned(),
+            None,
+        );
 
         Server {
             hostname,
             interface,
+            routes: vec![],
+            arp_table: HashMap::new(),
         }
     }
 }
