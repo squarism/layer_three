@@ -1,5 +1,6 @@
 use crate::mac::MacAddress;
 
+#[derive(Clone)]
 pub struct Interface {
     pub mac: MacAddress,
     pub ip: String,

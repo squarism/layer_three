@@ -1,12 +1,12 @@
 // represents a hosts file, what each server can lookup
 // we are not solving DNS here
 
-use std::net::Ipv4Addr;
+use std::net::IpAddr;
 
 #[allow(dead_code)]
 pub struct Host {
-    host: String,
-    ip: Ipv4Addr,
+    pub host: String,
+    pub ip: IpAddr,
 }
 
 #[cfg(test)]

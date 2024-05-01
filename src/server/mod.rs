@@ -3,41 +3,34 @@ pub mod hosts;
 pub mod interface;
 
 use core::fmt;
-use std::collections::HashMap;
 
 use interface::Interface;
 
 #[allow(dead_code)]
 struct Route {
-    destination: String,
-    gateway: String,
-    interface_name: String,
+    pub destination: String,
+    pub gateway: String,
+    pub interface_name: String,
 }
 
 #[allow(dead_code)]
 pub struct Server {
-    hostname: String,
+    pub hostname: String,
 
-    interface: Interface,               // for now, one interface
-    routes: Vec<Route>,                 // Routing table
-    arp_table: HashMap<String, String>, // Maps IP addresses to MAC addresses
+    pub interface: Interface, // for now, one interface
+    routes: Vec<Route>,       // Routing table
+    pub arp_table: arp::ArpCache,
 }
 
 #[allow(dead_code)]
 impl Server {
-    pub fn new(hostname: String) -> Server {
-        let interface = Interface::new(
-            "00:11:22:33:44:55",
-            "192.168.0.5".to_owned(),
-            "255.255.0.0".to_owned(),
-            None,
-        );
-
+    // TODO: multiple interfaces
+    pub fn new(hostname: String, interface: Interface) -> Server {
         Server {
             hostname,
             interface,
             routes: vec![],
-            arp_table: HashMap::new(),
+            arp_table: arp::ArpCache::new(),
         }
     }
 }

@@ -4,19 +4,19 @@ use std::net::IpAddr;
 use crate::mac::MacAddress;
 
 #[allow(dead_code)]
-struct ArpCache {
+pub struct ArpCache {
     entries: HashMap<IpAddr, MacAddress>,
 }
 
 #[allow(dead_code)]
 impl ArpCache {
-    fn new() -> Self {
+    pub fn new() -> Self {
         ArpCache {
             entries: HashMap::new(),
         }
     }
 
-    fn lookup(&mut self, ip_address: &IpAddr) -> Option<&MacAddress> {
+    pub fn lookup(&mut self, ip_address: &IpAddr) -> Option<&MacAddress> {
         let cache_hit = self.entries.get(ip_address);
 
         if cache_hit.is_none() {
