@@ -36,3 +36,32 @@ The other goal of this project is to stay close enough to the abstraction that L
 * NIC: Sends and receives Ethernet frames, encapsulates and decapsulates IP packets into/from Ethernet frames.
 * Switch: Forwards frames based on MAC address mappings.
 * Router (future addition): Determines the next hop for packets based on a more complex routing table and handles NAT operations if necessary.
+
+
+## Running
+
+```
+$ cargo run
+Interface with MAC: "11:12:13:14:15:16" plugged into port: 1
+Interface with MAC: "21:22:23:24:25:26" plugged into port: 2
+Sending frame out on port with MAC: [21, 22, 23, 24, 25, 26]
+Frame forwarded to MAC: "21:22:23:24:25:26"
+```
+
+Two boxes are plugged into the switch and the switch notes the MAC.  This is not how a real switch would work.  It would involve a broadcast to all ports which is not currently done in this scenario.
+
+Then box1 sends an ICMP ping.  This turns into an Ethernet frame.
+> Sending frame out
+
+Then the switch forwards it to MAC "21:22" which is box2.  Box1's MAC all start with 1s.  Box2's MAC all start with 2s.
+
+```
+box1 = 192.168.0.1 = 11:12:13:14:15:16
+box2 = 192.168.0.2 = 21:22:23:24:25:26
+```
+
+There are a few other steps which has no output which you can see in `main.rs`.
+
+
+## TODO
+- switch flooding, the switch does not learn ports' MACs when plugged in, it learns on send.  If the MAC doesn't exist in the table yet then all ports get a frame.

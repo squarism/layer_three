@@ -31,16 +31,29 @@ impl Switch {
 
         // watch out these MACs are hex
         self.mac_table.insert(interface.mac, port_number);
+
+        let fmac = crate::mac::to_string(&interface.mac);
+        println!(
+            "Interface with MAC: {:?} plugged into port: {}",
+            fmac, port_number
+        );
     }
 
     pub fn forward_frame(&mut self, frame: &Ethernet2Header) {
         if let Some(&port_number) = self.mac_table.get(&frame.destination) {
             if let Some(port) = self.ports.get(&port_number) {
                 port.send_frame(frame);
-                println!("Frame forwarded to MAC: {:02X?}", frame.destination);
+                println!(
+                    "Frame forwarded to MAC: {:?}",
+                    crate::mac::to_string(&frame.destination)
+                );
             }
+        } else {
+            println!(
+                "Cannot find mac {:?}",
+                crate::mac::to_string(&frame.destination)
+            );
         }
-        // TODO else statements here for error handling
     }
 }
 

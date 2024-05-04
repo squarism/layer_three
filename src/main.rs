@@ -1,7 +1,6 @@
+use etherparse::Ethernet2Header;
 use network::icmp;
 use server::{hosts::Host, Server};
-
-use crate::network::write_pcap;
 
 mod mac;
 mod network;
@@ -10,7 +9,10 @@ mod switch;
 
 fn main() {
     // Let's say that a server `box1` pings `box2`.
+
     // We need to set up our network "by hand"
+    let mut switch = switch::Switch::new();
+
     let box1_interface = server::interface::Interface::new(
         "11:12:13:14:15:16",
         "192.168.0.1".to_owned(),
@@ -19,6 +21,8 @@ fn main() {
     );
     let mut box1 = Server::new("box1".to_owned(), box1_interface.clone());
 
+    switch.plug_in_interface(1, &box1.interface);
+
     let box2_interface = server::interface::Interface::new(
         "21:22:23:24:25:26",
         "192.168.0.2".to_owned(),
@@ -26,6 +30,8 @@ fn main() {
         None,
     );
     let box2 = Server::new("box2".to_owned(), box2_interface.clone());
+
+    switch.plug_in_interface(2, &box2.interface);
 
     // box1 calls getbyhostname(box2) which is simulated here
     let hosts_file = make_hosts_file();
@@ -60,10 +66,12 @@ fn main() {
 
     // box1 crafts an ICMP echo request packet
     // the builder within here also wraps this in an ethernet request
+    // you can write this packet to a pcap file with write_pcap() in network/mod.rs
     let icmp_packet = icmp::packet(box1.interface.mac, *dest_mac, "This is a ping, weee");
-    // write_pcap("icmp.pcap", &icmp_packet);
 
     // the packet is sent over ethernet to the switch which has its own MAC table etc
+    let icmp_packet = Ethernet2Header::from_slice(&icmp_packet).unwrap().0;
+    switch.forward_frame(&icmp_packet);
 
     // the entire process is unwound on box2 which will not be covered here for now
 }

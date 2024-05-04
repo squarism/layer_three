@@ -34,7 +34,7 @@ impl ArpCache {
     fn broadcast_arp_request(&mut self, ip_address: IpAddr) {
         match ip_address.to_string().as_str() {
             "192.168.0.1" => self.add_entry(ip_address, [0x11, 0x12, 0x13, 0x14, 0x15, 0x16]),
-            "192.168.0.2" => self.add_entry(ip_address, [0x21, 0x22, 0x23, 0x24, 0x55, 0x26]),
+            "192.168.0.2" => self.add_entry(ip_address, [0x21, 0x22, 0x23, 0x24, 0x25, 0x26]),
             _ => {} // do nothing and like it
         }
     }
