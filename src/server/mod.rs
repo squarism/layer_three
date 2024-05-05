@@ -24,7 +24,6 @@ pub struct Server {
 
 #[allow(dead_code)]
 impl Server {
-    // TODO: multiple interfaces
     pub fn new(hostname: String, interface: Interface) -> Server {
         Server {
             hostname,

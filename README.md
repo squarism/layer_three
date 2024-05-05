@@ -65,3 +65,6 @@ There are a few other steps which has no output which you can see in `main.rs`.
 
 ## TODO
 - switch flooding, the switch does not learn ports' MACs when plugged in, it learns on send.  If the MAC doesn't exist in the table yet then all ports get a frame.
+- multiple interfaces on servers
+- routing outside of local lan ie: to a router, implement a router
+- port should send the frame out to the attached interface somehow
