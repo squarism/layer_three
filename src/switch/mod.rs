@@ -7,11 +7,11 @@ use std::{collections::HashMap, fmt};
 use crate::mac::MacAddress;
 use crate::server::interface::Interface;
 
-// an 8-port switch, could be any port size but we are keeping it simple
+// a dumb 8-port switch, could be any port size but we are keeping it simple
 pub struct Switch {
     ports: HashMap<u8, port::Port>,
     link_lights: HashMap<u8, bool>,
-    mac_table: HashMap<MacAddress, u8>, // MAC to port number
+    cam_table: HashMap<MacAddress, u8>, // MAC to port number
 }
 
 #[allow(dead_code)]
@@ -20,7 +20,7 @@ impl Switch {
         Self {
             ports: HashMap::new(),
             link_lights: HashMap::new(),
-            mac_table: HashMap::new(),
+            cam_table: HashMap::new(),
         }
     }
 
@@ -30,7 +30,7 @@ impl Switch {
         self.link_lights.insert(port_number, true);
 
         // watch out these MACs are hex
-        self.mac_table.insert(interface.mac, port_number);
+        self.cam_table.insert(interface.mac, port_number);
 
         let fmac = crate::mac::to_string(&interface.mac);
         println!(
@@ -40,7 +40,7 @@ impl Switch {
     }
 
     pub fn forward_frame(&mut self, frame: &Ethernet2Header) {
-        if let Some(&port_number) = self.mac_table.get(&frame.destination) {
+        if let Some(&port_number) = self.cam_table.get(&frame.destination) {
             if let Some(port) = self.ports.get(&port_number) {
                 port.send_frame(frame);
                 println!(
@@ -62,7 +62,7 @@ impl fmt::Debug for Switch {
         f.debug_struct("Switch")
             .field("ports", &self.ports)
             .field("link_lights", &self.link_lights)
-            .field("macs", &self.mac_table)
+            .field("macs", &self.cam_table)
             .finish()
     }
 }
@@ -91,13 +91,13 @@ mod tests {
         switch.plug_in_interface(1, &box1);
         switch.plug_in_interface(2, &box2);
 
-        assert_eq!(switch.mac_table.len(), 2);
+        assert_eq!(switch.cam_table.len(), 2);
         assert_eq!(switch.link_lights.get(&1), Some(&true));
         assert_eq!(switch.link_lights.get(&2), Some(&true));
     }
 
     #[test]
-    fn test_mac_table() {
+    fn test_cam_table() {
         let mut switch = Switch::new();
 
         let box1 = Interface::new(
@@ -118,6 +118,6 @@ mod tests {
 
         let mac_query: &[u8] = &[1, 1, 1, 1, 1, 1];
 
-        assert_eq!(switch.mac_table.get(mac_query), Some(&1));
+        assert_eq!(switch.cam_table.get(mac_query), Some(&1));
     }
 }
