@@ -1,4 +1,4 @@
-pub mod arp;
+pub mod arp_cache;
 pub mod hosts;
 pub mod interface;
 
@@ -19,7 +19,7 @@ pub struct Server {
 
     pub interface: Interface, // for now, one interface
     routes: Vec<Route>,       // Routing table
-    pub arp_table: arp::ArpCache,
+    pub arp_table: arp_cache::ArpCache,
 }
 
 #[allow(dead_code)]
@@ -29,7 +29,7 @@ impl Server {
             hostname,
             interface,
             routes: vec![],
-            arp_table: arp::ArpCache::new(),
+            arp_table: arp_cache::ArpCache::new(),
         }
     }
 }

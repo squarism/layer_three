@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::net::IpAddr;
 
 use crate::mac::MacAddress;
+use crate::network::arp::Arp;
 
 #[allow(dead_code)]
 pub struct ArpCache {
@@ -20,23 +21,16 @@ impl ArpCache {
         let cache_hit = self.entries.get(ip_address);
 
         if cache_hit.is_none() {
-            self.broadcast_arp_request(*ip_address)
+            let mac = Arp::broadcast_arp_request(*ip_address);
+            if let Some(mac) = mac {
+                self.add_entry(*ip_address, mac);
+            }
         }
         self.entries.get(ip_address)
     }
 
     fn add_entry(&mut self, ip_address: IpAddr, mac_address: MacAddress) {
         self.entries.insert(ip_address, mac_address);
-    }
-
-    // Simulating a broadcast, not accurate
-    // In a real scenario, this would involve network communication
-    fn broadcast_arp_request(&mut self, ip_address: IpAddr) {
-        match ip_address.to_string().as_str() {
-            "192.168.0.1" => self.add_entry(ip_address, [0x11, 0x12, 0x13, 0x14, 0x15, 0x16]),
-            "192.168.0.2" => self.add_entry(ip_address, [0x21, 0x22, 0x23, 0x24, 0x25, 0x26]),
-            _ => {} // do nothing and like it
-        }
     }
 }
 

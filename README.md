@@ -60,11 +60,12 @@ box1 = 192.168.0.1 = 11:12:13:14:15:16
 box2 = 192.168.0.2 = 21:22:23:24:25:26
 ```
 
-There are a few other steps which has no output which you can see in `main.rs`.
+There are a few other steps which have no output which you can see in `main.rs`.
 
 
 ## TODO
-- switch flooding, the switch does not learn ports' MACs when plugged in, it learns on send.  If the MAC doesn't exist in the table yet then all ports get a frame.
-- multiple interfaces on servers
-- routing outside of local lan ie: to a router, implement a router
-- port should send the frame out to the attached interface somehow
+- The sending of the bits over the port.  A cable is not modeled here so the bits are not transmitted.  In order to do this, we could make a cable abstraction that sends the bits (electricity) but this would likely involve more fakery.  Or, we could try to make an event loop and simulation "world" like a game.  But this would be a bunch of work.
+- Switch flooding, the switch does not learn ports' MACs when plugged in, it learns on send.  If the MAC doesn't exist in the table yet then all ports get a frame.
+- Multiple interfaces on servers
+- Routing outside of local lan ie: to a router, implement a router
+- Port should send the frame out to the attached interface somehow
