@@ -6,6 +6,7 @@ use std::{
 use pcap_file::pcap::{PcapPacket, PcapWriter};
 
 pub mod arp;
+pub mod ethernet;
 pub mod icmp;
 pub mod ip;
 

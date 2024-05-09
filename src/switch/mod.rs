@@ -39,19 +39,21 @@ impl Switch {
         );
     }
 
-    pub fn forward_frame(&mut self, frame: &Ethernet2Header) {
-        if let Some(&port_number) = self.cam_table.get(&frame.destination) {
+    pub fn forward_frame(&mut self, frame: Vec<u8>) {
+        let ethernet_frame = Ethernet2Header::from_slice(&frame).unwrap().0;
+
+        if let Some(&port_number) = self.cam_table.get(&ethernet_frame.destination) {
             if let Some(port) = self.ports.get(&port_number) {
-                port.send_frame(frame);
+                port.send_frame(&ethernet_frame);
                 println!(
                     "Frame forwarded to MAC: {:?}",
-                    crate::mac::to_string(&frame.destination)
+                    crate::mac::to_string(&ethernet_frame.destination)
                 );
             }
         } else {
             println!(
                 "Cannot find mac {:?}",
-                crate::mac::to_string(&frame.destination)
+                crate::mac::to_string(&ethernet_frame.destination)
             );
         }
     }
