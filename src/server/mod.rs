@@ -18,11 +18,10 @@ pub struct Server {
     pub hostname: String,
 
     pub interface: Interface, // for now, one interface
-    routes: Vec<Route>,       // Routing table
+    routes: Vec<Route>,       // routing table, not implemented
     pub arp_table: arp_cache::ArpCache,
 }
 
-#[allow(dead_code)]
 impl Server {
     pub fn new(hostname: String, interface: Interface) -> Server {
         Server {

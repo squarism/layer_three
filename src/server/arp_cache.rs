@@ -4,12 +4,10 @@ use std::net::IpAddr;
 use crate::mac::MacAddress;
 use crate::network::arp::Arp;
 
-#[allow(dead_code)]
 pub struct ArpCache {
     entries: HashMap<IpAddr, MacAddress>,
 }
 
-#[allow(dead_code)]
 impl ArpCache {
     pub fn new() -> Self {
         ArpCache {

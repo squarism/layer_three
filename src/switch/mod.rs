@@ -14,7 +14,6 @@ pub struct Switch {
     cam_table: HashMap<MacAddress, u8>, // MAC to port number
 }
 
-#[allow(dead_code)]
 impl Switch {
     pub fn new() -> Self {
         Self {

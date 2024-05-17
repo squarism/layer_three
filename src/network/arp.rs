@@ -2,10 +2,8 @@ use std::net::IpAddr;
 
 use crate::mac::MacAddress;
 
-#[allow(dead_code)]
 pub struct Arp {}
 
-#[allow(dead_code)]
 impl Arp {
     // Simulating a broadcast, not accurate or realistic
     // In a real scenario, this would involve network communication
