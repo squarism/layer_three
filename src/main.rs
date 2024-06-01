@@ -34,6 +34,11 @@ fn main() {
 
     // box1 calls getbyhostname(box2) which is simulated here
     let hosts_file = make_hosts_file();
+    let box1_host = hosts_file
+        .iter()
+        .find(|&h| h.host == box1.hostname)
+        .expect("The demo has gone south because box1 is not in hosts");
+
     let box2_host = hosts_file
         .iter()
         .find(|&h| h.host == box2.hostname)
@@ -53,7 +58,7 @@ fn main() {
 
     // box1 crafts an ICMP echo request and IP packet
     let payload = "This is a ping, weee";
-    let icmp_packet = icmp::packet(box1.interface.ip, box2.interface.ip, payload);
+    let icmp_packet = icmp::packet(box1_host.ip.to_string(), box2_host.ip.to_string(), payload);
 
     // Once the IP address of box2 is known, box1 checks its ARP cache.
     // now, this is a one-shot simulation program so we will setup this scenario but later we
