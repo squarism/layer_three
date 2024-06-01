@@ -1,6 +1,8 @@
 use etherparse::Ethernet2Header;
 
-pub fn build_ethernet(source: [u8; 6], destination: [u8; 6], payload: Vec<u8>) -> Vec<u8> {
+use crate::mac::MacAddress;
+
+pub fn build_ethernet(source: MacAddress, destination: MacAddress, payload: Vec<u8>) -> Vec<u8> {
     let mut buffer = Vec::<u8>::new();
 
     let header = Ethernet2Header {
