@@ -16,7 +16,6 @@ struct Route {
 #[allow(dead_code)]
 pub struct Server {
     pub hostname: String,
-
     pub interface: Interface, // for now, one interface
     routes: Vec<Route>,       // routing table, not implemented
     pub arp_table: arp_cache::ArpCache,
